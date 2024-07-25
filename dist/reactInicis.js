@@ -64,7 +64,8 @@ var payServerTextMb = function payServerTextMb(index) {
 var ReactInicis = function ReactInicis(_ref) {
   var payData = _ref.payData,
       isPurchase = _ref.isPurchase,
-      isTest = _ref.isTest;
+      isTest = _ref.isTest,
+      isPC = _ref.isPC;
   var mobilePurchaseRef = (0, _react.useRef)();
 
   var _useState = (0, _react.useState)(0),
@@ -92,7 +93,7 @@ var ReactInicis = function ReactInicis(_ref) {
     setOid(_timeStamp + (0, _randomStringFunc.default)(7));
     var body = document.querySelector("body"); // PC
 
-    if (body.offsetWidth > 1024) {
+    if (isPC) {
       var agt = navigator.userAgent.toLowerCase();
       var script = document.createElement("script");
       script.src = isTest ? testURL : releaseURL;
@@ -165,12 +166,12 @@ var ReactInicis = function ReactInicis(_ref) {
     type: "hidden",
     readOnly: true,
     name: "signature",
-    value: (0, _SHA.default)("oid=".concat(oid, "&price=").concat(payData.productPrice, "&timestamp=").concat(timestamp))
+    value: (0, _SHA.default)("oid=".concat(payData.oid, "&price=").concat(payData.productPrice, "&timestamp=").concat(timestamp))
   }), /*#__PURE__*/_react.default.createElement("input", {
     type: "hidden",
     readOnly: true,
     name: "oid",
-    value: oid
+    value: payData.oid
   }), /*#__PURE__*/_react.default.createElement("input", {
     type: "hidden",
     readOnly: true,
@@ -190,7 +191,13 @@ var ReactInicis = function ReactInicis(_ref) {
     type: "hidden",
     readOnly: true,
     name: "acceptmethod",
-    value: "HPP(".concat(payData.telStatus, ")")
+    value: "HPP(".concat(payData.telStatus, ")").concat(":below1000")
+  })
+  , payData.payStatus !== 2 && /*#__PURE__*/_react.default.createElement("input", {
+    type: "hidden",
+    readOnly: true,
+    name: "acceptmethod",
+    value: "below1000"
   }), /*#__PURE__*/_react.default.createElement("input", {
     type: "hidden",
     readOnly: true,
@@ -225,7 +232,7 @@ var ReactInicis = function ReactInicis(_ref) {
     type: "text",
     readOnly: true,
     name: "P_OID",
-    value: oid
+    value: payData.oid
   }), /*#__PURE__*/_react.default.createElement("input", {
     type: "text",
     readOnly: true,
@@ -241,6 +248,11 @@ var ReactInicis = function ReactInicis(_ref) {
     readOnly: true,
     name: "P_UNAME",
     value: payData.buyerName
+  }), /*#__PURE__*/_react.default.createElement("input", {
+    type: "hidden",
+    readOnly: true,
+    name: "P_RESERVED",
+    value: "below1000=Y"
   }), payData.payStatus === 2 && /*#__PURE__*/_react.default.createElement("input", {
     type: "text",
     readOnly: true,
@@ -253,3 +265,4 @@ var ReactInicis = function ReactInicis(_ref) {
 
 var _default = ReactInicis;
 exports.default = _default;
+
